@@ -58,19 +58,19 @@ def process_pages(params):
     else:
         pages = int(processed_page['total'] / per_page) + 1
     while page <= pages:
-        params.update({'page': page})
+        params['page'] = page
         salaries += process_page(params)['salaries']
         page += 1
-    lang_statistic.update({'average_salary': predict_average_salary(salaries),
-                           'vacancies_processed': len(salaries)})
+    lang_statistic['average_salary'] = predict_average_salary(salaries)
+    lang_statistic['vacancies_processed'] = len(salaries)
     return lang_statistic
 
 
 def get_sj_vacancies_statistics(langs, params):
     lang_statistics = {}
     for lang in langs:
-        params.update({'keyword': f'Программист {lang}',
-                       'page': 0})
+        params['keyword'] = f'программист {lang}'
+        params['page'] = 0
         lang_statistics.update({lang: process_pages(params)})
     return lang_statistics
 
