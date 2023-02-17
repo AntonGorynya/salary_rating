@@ -1,7 +1,7 @@
 import requests
-import config
-from pprint import pprint
+import os
 from dotenv import load_dotenv
+from pprint import pprint
 from common import predict_average_salary, predict_salary
 
 
@@ -60,6 +60,7 @@ def get_hh_vacancies_statistics(langs, params):
 
 if __name__ == '__main__':
     load_dotenv()
-    params = config.hh_params
-    langs = config.langs
-    pprint(get_hh_vacancies_statistics(langs, params))
+    langs = os.getenv('LANGS').split(', ')
+    hh_params = {'area': os.getenv('HH_AREA'),
+                 'period': os.getenv('HH_PERIOD')}
+    pprint(get_hh_vacancies_statistics(langs, hh_params))

@@ -1,5 +1,5 @@
+import os
 import terminaltables.ascii_table
-import config
 from dotenv import load_dotenv
 from hh_parser import get_hh_vacancies_statistics
 from sj_parser import get_sj_vacancies_statistics
@@ -30,10 +30,13 @@ def print_table(title, data):
 
 if __name__ == '__main__':
     load_dotenv()
-    langs = config.langs
-    sj_params = config.sj_params
-    hh_params = config.hh_params
-    sj_statistics = get_sj_vacancies_statistics(langs, sj_params)
+    superjob_key = os.getenv('SUPER_JOB_KEY')
+    langs = os.getenv('LANGS').split(', ')
+    sj_params = {'town': os.getenv('SJ_AREA'),
+                 'period': os.getenv('SJ_PERIOD')}
+    hh_params = {'area': os.getenv('HH_AREA'),
+                 'period': os.getenv('HH_PERIOD')}
+    sj_statistics = get_sj_vacancies_statistics(langs, sj_params, superjob_key)
     hh_statistics = get_hh_vacancies_statistics(langs, hh_params)
     print_table('SuperJob Moscow', sj_statistics)
     print()
