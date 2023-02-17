@@ -53,7 +53,7 @@ def process_pages(params):
     return lang_statistic
 
 
-def vacancies_statistics_hh(langs, params):
+def get_hh_vacancies_statistics(langs, params):
     lang_statistics = {}
     for lang in langs:
         params.update({'text': f'программист {lang}',
@@ -66,4 +66,4 @@ if __name__ == '__main__':
     load_dotenv()
     params = config.params_hh
     langs = config.langs
-    pprint(vacancies_statistics_hh(langs, params))
+    pprint(get_hh_vacancies_statistics(langs, params))

@@ -1,8 +1,8 @@
 import terminaltables.ascii_table
 import config
 from dotenv import load_dotenv
-from hh_parser import vacancies_statistics_hh
-from sj_parser import vacancies_statistics_sj
+from hh_parser import get_hh_vacancies_statistics
+from sj_parser import get_sj_vacancies_statistics
 
 
 def convert_to_table_data(statistics):
@@ -31,10 +31,10 @@ def print_table(title, data):
 if __name__ == '__main__':
     load_dotenv()
     langs = config.langs
-    params_sj = config.params_sj
-    params_hh = config.params_hh
-    sj_statistics = vacancies_statistics_sj(langs, params_sj)
-    hh_statistics = vacancies_statistics_hh(langs, params_hh)
+    sj_params = config.sj_params
+    hh_params = config.hh_params
+    sj_statistics = get_sj_vacancies_statistics(langs, sj_params)
+    hh_statistics = get_hh_vacancies_statistics(langs, hh_params)
     print_table('SuperJob Moscow', sj_statistics)
     print()
     print_table('HeadHunter Moscow', hh_statistics)

@@ -66,10 +66,9 @@ def process_pages(params):
     return lang_statistic
 
 
-def vacancies_statistics_sj(langs, params):
+def get_sj_vacancies_statistics(langs, params):
     lang_statistics = {}
     for lang in langs:
-        print(lang)
         params.update({'keyword': f'Программист {lang}',
                        'page': 0})
         lang_statistics.update({lang: process_pages(params)})
@@ -80,4 +79,4 @@ if __name__ == '__main__':
     load_dotenv()
     params = config.params_sj
     langs = config.langs
-    pprint(vacancies_statistics_sj(langs, params))
+    pprint(get_sj_vacancies_statistics(langs, params))
