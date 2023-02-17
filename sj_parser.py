@@ -33,18 +33,19 @@ def get_vacancies(params):
 
 
 def process_page(params):
-    vacancies_meta = get_vacancies(params)
-    vacancies = vacancies_meta['vacancies']
+    vacancies = get_vacancies(params)
+    total = vacancies['total']
+    vacancies = vacancies['vacancies']
     salaries = []
     for vacancy in vacancies:
         predicted_salary = predict_rub_salary_for_superjob(vacancy)
         if predicted_salary:
             salaries.append(predicted_salary)
-    output = {
+    processed_page = {
         'salaries': salaries,
-        'total': vacancies_meta['total']
+        'total': total
     }
-    return output
+    return processed_page
 
 
 def process_pages(params):

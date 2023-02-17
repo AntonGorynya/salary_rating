@@ -5,25 +5,25 @@ from hh_parser import get_hh_vacancies_statistics
 from sj_parser import get_sj_vacancies_statistics
 
 
-def convert_to_table_data(statistics):
-    table_data = []
-    table_data.append([
+def convert_to_table_rows(statistics):
+    table_rows = []
+    table_rows.append([
         'Язык программирования',
         'Вакансий найдено',
         'Вакансий обработано',
         'Средняя зарплата'
     ])
     for statistic in statistics:
-        table_data.append([statistic,
+        table_rows.append([statistic,
                            statistics[statistic]['vacancies_found'],
                            statistics[statistic]['vacancies_processed'],
                            statistics[statistic]['average_salary']])
-    return table_data
+    return table_rows
 
 
 def print_table(title, data):
-    table_data = convert_to_table_data(data)
-    table = terminaltables.ascii_table.AsciiTable(table_data)
+    table_rows = convert_to_table_rows(data)
+    table = terminaltables.ascii_table.AsciiTable(table_rows)
     table.title = title
     print(table.table)
 

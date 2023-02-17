@@ -6,14 +6,14 @@ from common import predict_average_salary
 
 
 def predict_rub_salary(vacancy):
-    salary_meta = vacancy['salary']
-    if salary_meta:
-        if salary_meta['from'] is None:
-            return salary_meta['to']*0.8
-        elif salary_meta['to'] is None:
-            return salary_meta['from']*1.2
+    salary = vacancy['salary']
+    if salary:
+        if salary['from'] is None:
+            return salary['to']*0.8
+        elif salary['to'] is None:
+            return salary['from']*1.2
         else:
-            return (salary_meta['from'] + salary_meta['to'])/2
+            return (salary['from'] + salary['to'])/2
     else:
         return None
 
@@ -29,13 +29,13 @@ def process_page(params):
         predicted_salary = predict_rub_salary(vacancy)
         if predicted_salary:
             salaries.append(predicted_salary)
-    output = {
+    processed_page = {
         'page': page,
         'pages': pages,
         'salaries': salaries,
         'total': response['found']
     }
-    return output
+    return processed_page
 
 
 def process_pages(params):
