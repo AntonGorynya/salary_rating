@@ -2,20 +2,16 @@ import requests
 import config
 from pprint import pprint
 from dotenv import load_dotenv
-from common import predict_average_salary
+from common import predict_average_salary, predict_salary
 
 
 def predict_rub_salary(vacancy):
     salary = vacancy['salary']
-    if salary:
-        if salary['from'] is None:
-            return salary['to']*0.8
-        elif salary['to'] is None:
-            return salary['from']*1.2
-        else:
-            return (salary['from'] + salary['to'])/2
-    else:
+    if not salary:
         return None
+    payment_from = salary['from']
+    payment_to = salary['to']
+    return predict_salary(payment_from, payment_to)
 
 
 def process_page(params):

@@ -3,20 +3,13 @@ from dotenv import load_dotenv
 import config
 import os
 from pprint import pprint
-from common import predict_average_salary
+from common import predict_average_salary, predict_salary
 
 
 def predict_rub_salary_for_superjob(vacancy):
     payment_from = vacancy['payment_from']
     payment_to = vacancy['payment_to']
-    if (not payment_from) and (not payment_to):
-        return None
-    elif not payment_from:
-        return payment_to*0.8
-    elif not payment_to:
-        return payment_from*1.2
-    else:
-        return (payment_from + payment_to)/2
+    return predict_salary(payment_from, payment_to)
 
 
 def get_vacancies(params):
@@ -78,6 +71,6 @@ def get_sj_vacancies_statistics(langs, params):
 
 if __name__ == '__main__':
     load_dotenv()
-    params = config.params_sj
+    params = config.sj_params
     langs = config.langs
     pprint(get_sj_vacancies_statistics(langs, params))
