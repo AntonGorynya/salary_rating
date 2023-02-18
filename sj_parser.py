@@ -23,11 +23,13 @@ def process_page(params, superjob_key):
         predicted_salary = predict_salary(payment_from, payment_to)
         if predicted_salary:
             salaries.append(predicted_salary)
-    return total, salaries
+    return {'total': total, 'salaries': salaries}
 
 
 def process_pages(params, superjob_key):
-    total, salaries = process_page(params, superjob_key)
+    processed_page = process_page(params, superjob_key)
+    total = processed_page['total']
+    salaries = processed_page['salaries']
     page = 1
     per_page = 20
     if total % per_page:
@@ -36,7 +38,7 @@ def process_pages(params, superjob_key):
         pages = total / per_page
     while page <= pages:
         params['page'] = page
-        salaries += process_page(params, superjob_key)[1]
+        salaries += process_page(params, superjob_key)['salaries']
         page += 1
     vacancies_processed = len(salaries)
     average_salary = round(sum(salaries) / vacancies_processed, 2)
