@@ -65,6 +65,8 @@ def get_hh_vacancies_statistics(langs, params):
 if __name__ == '__main__':
     load_dotenv()
     langs = os.getenv('LANGS').split(', ')
-    hh_params = {'area': os.getenv('HH_AREA'),
-                 'period': os.getenv('HH_PERIOD')}
+    hh_params = {
+        'area': os.getenv('HH_AREA'),
+        'period': os.getenv('HH_PERIOD')
+    }
     pprint(get_hh_vacancies_statistics(langs, hh_params))

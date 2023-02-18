@@ -61,6 +61,8 @@ if __name__ == '__main__':
     load_dotenv()
     superjob_key = os.getenv('SUPER_JOB_KEY')
     langs = os.getenv('LANGS').split(', ')
-    sj_params = {'town': os.getenv('SJ_AREA'),
-                 'period': os.getenv('SJ_PERIOD')}
+    sj_params = {
+        'town': os.getenv('SJ_AREA'),
+        'period': os.getenv('SJ_PERIOD')
+    }
     pprint(get_sj_vacancies_statistics(langs, sj_params, superjob_key))
