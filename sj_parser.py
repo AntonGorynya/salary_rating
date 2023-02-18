@@ -2,13 +2,7 @@ import requests
 from dotenv import load_dotenv
 import os
 from pprint import pprint
-from common import predict_average_salary, predict_salary
-
-
-def predict_rub_salary_for_superjob(vacancy):
-    payment_from = vacancy['payment_from']
-    payment_to = vacancy['payment_to']
-    return predict_salary(payment_from, payment_to)
+from common import predict_salary
 
 
 def get_vacancies(params, superjob_key):
@@ -17,45 +11,40 @@ def get_vacancies(params, superjob_key):
     response = requests.get('https://api.superjob.ru/2.0/vacancies/', headers=headers, params=params)
     response.raise_for_status()
     response = response.json()
-    output = {
-        'total': response['total'],
-        'vacancies': response['objects']
-    }
-    return output
+    return response['total'], response['objects']
 
 
 def process_page(params, superjob_key):
-    vacancies = get_vacancies(params, superjob_key)
-    total = vacancies['total']
-    vacancies = vacancies['vacancies']
+    total, vacancies = get_vacancies(params, superjob_key)
     salaries = []
     for vacancy in vacancies:
-        predicted_salary = predict_rub_salary_for_superjob(vacancy)
+        payment_from = vacancy['payment_from']
+        payment_to = vacancy['payment_to']
+        predicted_salary = predict_salary(payment_from, payment_to)
         if predicted_salary:
             salaries.append(predicted_salary)
-    processed_page = {
-        'salaries': salaries,
-        'total': total
-    }
-    return processed_page
+    return total, salaries
 
 
 def process_pages(params, superjob_key):
-    processed_page = process_page(params, superjob_key)
-    salaries = processed_page['salaries']
-    lang_statistic = {'vacancies_found': processed_page['total']}
+    total, salaries = process_page(params, superjob_key)
     page = 1
     per_page = 20
-    if processed_page['total'] % per_page:
-        pages = int(processed_page['total'] / per_page) + 1
+    if total % per_page:
+        pages = int(total / per_page) + 1
     else:
-        pages = processed_page['total'] / per_page
+        pages = total / per_page
     while page <= pages:
         params['page'] = page
-        salaries += process_page(params, superjob_key)['salaries']
+        salaries += process_page(params, superjob_key)[1]
         page += 1
-    lang_statistic['average_salary'] = predict_average_salary(salaries)
-    lang_statistic['vacancies_processed'] = len(salaries)
+    vacancies_processed = len(salaries)
+    average_salary = round(sum(salaries) / vacancies_processed, 2)
+    lang_statistic = {
+        'vacancies_found': total,
+        'average_salary': average_salary,
+        'vacancies_processed': vacancies_processed
+    }
     return lang_statistic
 
 
@@ -64,7 +53,7 @@ def get_sj_vacancies_statistics(langs, params, superjob_key):
     for lang in langs:
         params['keyword'] = f'программист {lang}'
         params['page'] = 0
-        lang_statistics.update({lang: process_pages(params, superjob_key)})
+        lang_statistics[lang] = process_pages(params, superjob_key)
     return lang_statistics
 
 

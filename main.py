@@ -6,13 +6,12 @@ from sj_parser import get_sj_vacancies_statistics
 
 
 def convert_to_table_rows(statistics):
-    table_rows = []
-    table_rows.append([
+    table_rows = [[
         'Язык программирования',
         'Вакансий найдено',
         'Вакансий обработано',
         'Средняя зарплата'
-    ])
+    ]]
     for statistic in statistics:
         table_rows.append([statistic,
                            statistics[statistic]['vacancies_found'],
@@ -21,8 +20,7 @@ def convert_to_table_rows(statistics):
     return table_rows
 
 
-def print_table(title, data):
-    table_rows = convert_to_table_rows(data)
+def print_table(title, table_rows):
     table = terminaltables.ascii_table.AsciiTable(table_rows)
     table.title = title
     print(table.table)
@@ -38,6 +36,6 @@ if __name__ == '__main__':
                  'period': os.getenv('HH_PERIOD')}
     sj_statistics = get_sj_vacancies_statistics(langs, sj_params, superjob_key)
     hh_statistics = get_hh_vacancies_statistics(langs, hh_params)
-    print_table('SuperJob Moscow', sj_statistics)
+    print_table('SuperJob Moscow', convert_to_table_rows(sj_statistics))
     print()
-    print_table('HeadHunter Moscow', hh_statistics)
+    print_table('HeadHunter Moscow', convert_to_table_rows(hh_statistics))

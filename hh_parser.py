@@ -2,7 +2,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from pprint import pprint
-from common import predict_average_salary, predict_salary
+from common import predict_salary
 
 
 def predict_rub_salary(vacancy):
@@ -38,14 +38,18 @@ def process_pages(params):
     processed_page = process_page(params)
     pages = processed_page['pages']
     salaries = processed_page['salaries']
-    lang_statistic = {'vacancies_found': processed_page['total']}
     page = 1
     while page <= pages:
         params['page'] = page
         salaries += process_page(params)['salaries']
         page += 1
-    lang_statistic['average_salary'] = predict_average_salary(salaries)
-    lang_statistic['vacancies_processed'] = len(salaries)
+    vacancies_processed = len(salaries)
+    average_salary = round(sum(salaries) / vacancies_processed, 2)
+    lang_statistic = {
+        'vacancies_found': processed_page['total'],
+        'average_salary': average_salary,
+        'vacancies_processed': vacancies_processed
+    }
     return lang_statistic
 
 
@@ -54,7 +58,7 @@ def get_hh_vacancies_statistics(langs, params):
     for lang in langs:
         params['text'] = f'программист {lang}'
         params['page'] = 0
-        lang_statistics.update({lang: process_pages(params)})
+        lang_statistics[lang] = process_pages(params)
     return lang_statistics
 
 
