@@ -2,7 +2,7 @@ import requests
 from dotenv import load_dotenv
 import os
 from pprint import pprint
-from common import predict_salary
+from common import predict_salary, predict_average_salary
 
 
 def get_vacancies(params, superjob_key):
@@ -40,8 +40,7 @@ def process_pages(params, superjob_key):
         params['page'] = page
         salaries += process_page(params, superjob_key)['salaries']
         page += 1
-    vacancies_processed = len(salaries)
-    average_salary = round(sum(salaries) / vacancies_processed, 2)
+    vacancies_processed, average_salary = predict_average_salary(salaries)
     lang_statistic = {
         'vacancies_found': total,
         'average_salary': average_salary,
